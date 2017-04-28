@@ -19,10 +19,11 @@ class Devise::DeviseAuthyController < DeviseController
 
   # verify 2fa
   def POST_verify_authy
+
     token = Authy::API.verify({
-      :id => @resource.authy_id,
-      :token => params[:token],
-      :force => true
+                                :id => @resource.authy_id,
+                                :token => params[:authy][:token],
+                                :force => true
     })
 
     if token.ok?
@@ -30,7 +31,7 @@ class Devise::DeviseAuthyController < DeviseController
 
       session["#{resource_name}_authy_token_checked"] = true
 
-      remember_device if params[:remember_device].to_i == 1
+      remember_device if params[:authy][:remember_device].to_i == 1
       if session.delete("#{resource_name}_remember_me") == true && @resource.respond_to?(:remember_me=)
         @resource.remember_me = true
       end
@@ -56,8 +57,8 @@ class Devise::DeviseAuthyController < DeviseController
   def POST_enable_authy
     @authy_user = Authy::API.register_user(
       :email => resource.email,
-      :cellphone => params[:cellphone],
-      :country_code => params[:country_code]
+      :cellphone => params[:authy][:cellphone],
+      :country_code => params[:authy][:country_code]
     )
 
     if @authy_user.ok?
@@ -98,9 +99,9 @@ class Devise::DeviseAuthyController < DeviseController
 
   def POST_verify_authy_installation
     token = Authy::API.verify({
-      :id => self.resource.authy_id,
-      :token => params[:token],
-      :force => true
+                                :id => self.resource.authy_id,
+                                :token => params[:authy][:token],
+                                :force => true
     })
 
     self.resource.authy_enabled = token.ok?

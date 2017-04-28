@@ -25,6 +25,8 @@ require 'devise-authy/routes'
 require 'devise-authy/rails'
 require 'devise-authy/models/authy_authenticatable'
 require 'devise-authy/models/authy_lockable'
+require 'devise-authy/authy_verify_form_object'
+require 'devise-authy/authy_enable_form_object'
 
 Devise.add_module :authy_authenticatable, :model => 'devise-authy/models/authy_authenticatable', :controller => :devise_authy, :route => :authy
 Devise.add_module :authy_lockable,        :model => 'devise-authy/models/authy_lockable'
